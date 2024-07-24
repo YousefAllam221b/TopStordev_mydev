@@ -1,12 +1,12 @@
-import numpy as np
+import sys
 import pandas as pd
 import difflib
 import io
-from openpyxl import load_workbook
-from openpyxl.styles import PatternFill
 import csv
 import html
 import math
+from openpyxl import load_workbook
+from openpyxl.styles import PatternFill
 from openpyxl.comments import Comment
 
 def normalize_text(text):
@@ -173,7 +173,27 @@ def main(old_file, new_file, output_file):
             df_to_be_written.to_excel(writer, sheet_name=sheet_name, index=False, header=False)
 
 if __name__ == "__main__":
-    old_file = 'original.xlsx'
-    new_file = 'amended.xlsx'
-    output_file = 'output.xlsx'
+    # check if the number of arguments is correct
+    if len(sys.argv) != 4:
+        print("Wrong Number of Arguments, Usage: python sheetDifference.py <old_file> <new_file> <output_file>")
+        sys.exit(1)
+    
+    old_file = sys.argv[1]
+    new_file = sys.argv[2]
+    output_file = sys.argv[3]
+    
+    # check if the files are of the correct type
+    if not old_file.endswith('.xlsx') or not new_file.endswith('.xlsx') or not output_file.endswith('.xlsx'):
+        print("Wrong File Type, Usage: python sheetDifference.py <old_file> <new_file> <output_file>")
+        sys.exit(1)
+
+    # check if the files exist and print which one does not exist
+    try:
+        with open(sys.argv[1]) as f:
+            pass
+        with open(sys.argv[2]) as f:
+            pass
+    except FileNotFoundError as not_found:
+        print('File "${0}" Not Found, Usage: python sheetDifference.py <old_file.xlsx> <new_file.xlsx> <output_file.xlsx>'.format(not_found.filename))
+        sys.exit(1)
     main(old_file, new_file, output_file)
